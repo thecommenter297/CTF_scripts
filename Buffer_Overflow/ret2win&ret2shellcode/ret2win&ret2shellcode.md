@@ -2,12 +2,6 @@
 
 <html>
 
-<style>
-
-   html {padding-left: 10%}
-
-</style>
-
 <h3>Hướng dẫn chèn shellcode từ lỗi Buffer Overflow từ căn bản</h3>
 
 
