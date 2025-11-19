@@ -12,6 +12,7 @@ Bài viết có thể sẽ có nhiều thiếu sót vì mình chỉ là beginner
 <h3>Một vài kiến thức cơ bản</h3>
 
 **Format specifiers**
+
 ![alt text](image.png)
 
 Đây là một vài format specifiers cơ bản mà các bạn cần nắm được. Ngoài ra còn có:
