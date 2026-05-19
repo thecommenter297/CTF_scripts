@@ -315,7 +315,7 @@ Ta cũng chưa rõ `0x7ffc748f66a0` là cái gì. Nhưng biết rằng nó nằm
 
 ![image](https://hackmd.io/_uploads/HJ8nOJbgWx.png)
 
-```pwndbg
+```asm
 pwndbg> disas main 
 Dump of assembler code for function main:
    0x00000000000011e9 <+0>:	endbr64
@@ -362,7 +362,7 @@ End of assembler dump.
 pwndbg> 
 ```
 Đặt breakpoint trước khi hàm `printf` được gọi để thấy rõ stack lúc đó
-```pwndbg
+```asm
 pwndbg> b *main+142
 Breakpoint 1 at 0x1277
 pwndbg> b *main+147
@@ -371,7 +371,7 @@ pwndbg>
 ```
 * Lưu ý: Khi set breakpoint trong trường hợp này nên chỉ định rõ tên hàm + offset vì địa chỉ các lệnh khi chương trình chưa chạy có thể sẽ khác so với lúc chạy
 
-```pwndbg
+```asm
 pwndbg> run
 Starting program: /home/khanh/Code/The_Art_Of_Exploitation_Labs/format_string/read 
 [Thread debugging using libthread_db enabled]
@@ -380,7 +380,7 @@ Using host libthread_db library "/lib/x86_64-linux-gnu/libthread_db.so.1".
 ```
 
 Đây chính là stack trước khi gọi hàm `printf`
-```pwndbg
+```asm
 Breakpoint 1, 0x0000555555555277 in main ()
 LEGEND: STACK | HEAP | CODE | DATA | WX | RODATA
 ─────────────────────────────────────────────────[ REGISTERS / show-flags off / show-compact-regs off ]─────────────────────────────────────────────────
@@ -437,7 +437,7 @@ pwndbg>
 ```
 Output sau khi gọi hàm `printf` xong:
 
-```pwndbg
+```asm
 pwndbg> c
 Continuing.
 0x7fffffffdd40
@@ -498,7 +498,7 @@ pwndbg>
 
 Kết quả in ra là `0x7fffffffdd40`, chính là giá trị mà địa chỉ trong thanh ghi `rbp` đang trỏ đến. Có vẻ giá trị này cũng thuộc phạm vi stack. Có thể dùng lệnh `vmmap` để kiểm tra.
 
-```pwndbg
+```asm
 pwndbg> vmmap
 LEGEND: STACK | HEAP | CODE | DATA | WX | RODATA
              Start                End Perm     Size  Offset File (set vmmap-prefer-relpaths on)
@@ -530,7 +530,7 @@ pwndbg>
 ```
 Điều này xác nhận rằng `0x7fffffffdd40` là địa chỉ thuộc stack. Nếu bạn vẫn cảm thấy bối rối khi xác định địa chỉ này có thuộc stack hay không, hãy lấy địa chỉ kết thúc của stack trừ đi `0x7fffffffdd40`. Nếu nó nhỏ hơn hoặc bằng `0x21000` thì nó thuộc phạm vi stack.
 
-```pwndbg
+```asm
 pwndbg> p /x 0x7ffffffff000 - 0x7fffffffdd40
 $1 = 0x12c0
 pwndbg> 
@@ -542,7 +542,7 @@ Trong phạm vi stack, dù ASLR hay PIE có bật thì khoảng cách giữa cá
 
 Ta có thể lợi dụng điều này để tính toán ra được địa chỉ return address của hàm main
 
-```pwndbg
+```asm
 ───────────────────────────────────────────────────────────────────────[ STACK ]────────────────────────────────────────────────────────────────────────
 00:0000│ rsp 0x7fffffffdc70 ◂— 0xa7024323125 /* '%12$p\n' */
 01:0008│-028 0x7fffffffdc78 ◂— 0
@@ -560,13 +560,13 @@ Theo cấu trúc stackframe đã biết thì return address nằm ngay trên pre
 * lower address: tiến về 0x00...000
 
 Vậy có thể suy được ra return address của hàm main là `0x7ffff7c2a1ca`, địa chỉ trỏ đến nó là `0x7fffffffdca8`
-```pwndbg
+```asm
 06:0030│ rbp 0x7fffffffdca0 —▸ 0x7fffffffdd40 —▸ 0x7fffffffdda0 ◂— 0
 07:0038│+008 0x7fffffffdca8 —▸ 0x7ffff7c2a1ca (__libc_start_call_main+122) ◂— mov edi, eax
 ```
 Địa chỉ `0x7fffffffdd40` (previous rbp, cũng là ouput của `%12$p`) cách `0x7fffffffdca8` (địa chỉ trỏ tới return address) là:
 
-```pwndbg
+```asm
 pwndbg> p /x 0x7fffffffdd40 - 0x7fffffffdca8
 $2 = 0x98
 ```
@@ -769,7 +769,7 @@ pwndbg> attach 80530
 
 Kiểm  tra giá trị tại địa chỉ `0x7ffc0e5eb088`
 
-```pwndbg
+```asm
 pwndbg> x/xg 0x7ffc0e5eb088
 0x7ffc0e5eb088:	0x00007b8a9602a101
 ```
@@ -869,7 +869,7 @@ addr of ret: 0x7fffa9909698
 
 Gắn pid vào gdb và kiểm tra 1 lần nữa:
 
-```pwndbg
+```asm
 pwndbg> x/xg 0x7fffa9909698
 0x7fffa9909698:	0x00007fffa9909698
 pwndbg> 
