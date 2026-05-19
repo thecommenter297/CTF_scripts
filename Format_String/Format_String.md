@@ -52,14 +52,14 @@ printf("Hello world\n");
 printf("val = %d, str = %s\n", 42, "abc");
 ```
 
--- %d đọc một int, giá trị 42 được lưu vào `rsi`
+* %d đọc một int, giá trị 42 được lưu vào `rsi`
 
--- %s đọc một char* , `rdx` trỏ đến địa chỉ của "abc"
+* %s đọc một char* , `rdx` trỏ đến địa chỉ của "abc"
 
--- Thứ tự mong đợi đối số của hàm `printf` trên x86_64 Linux với chuẩn `System V ABI` là: 
-    +) `rdi`: luôn luôn có giá trị được dùng cho printf, vì nếu không có đối số (argument) sẽ không hợp lệ.
-    +) Sau đó là các đối số theo thứ tự: `rsi`, `rdx`, `rcx`, `r8`, `r9`, nếu có float thì sau đó sẽ là các thanh `xmm0 - xmm7` dành cho số thập phân
-    +) Hết thứ tự ở các thanh ghi, các giá trị trên stack sẽ được in ra
+* Thứ tự mong đợi đối số của hàm `printf` trên x86_64 Linux với chuẩn `System V ABI` là: 
+    * `rdi`: luôn luôn có giá trị được dùng cho printf, vì nếu không có đối số (argument) sẽ không hợp lệ.
+    * Sau đó là các đối số theo thứ tự: `rsi`, `rdx`, `rcx`, `r8`, `r9`, nếu có float thì sau đó sẽ là các thanh `xmm0 - xmm7` dành cho số thập phân
+    * Hết thứ tự ở các thanh ghi, các giá trị trên stack sẽ được in ra
 
 <hr>
 
