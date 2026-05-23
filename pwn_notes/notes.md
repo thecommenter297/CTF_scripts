@@ -19,6 +19,10 @@ scp -i <đường dẫn đến file key> hacker@dojo.pwn.college:<link_file> .
 unzip file.zip
 ```
 
+```shell
+tar -xJvf ten_file.tar.xz
+```
+
 ##### Patch file libcapstone.so.5 và libc trên pwn.college
 ```bash
 patchelf --set-interpreter ./ld-linux-x86-64.so.2 ./ello-ackers
