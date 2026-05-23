@@ -23,6 +23,10 @@ unzip file.zip
 tar -xJvf ten_file.tar.xz
 ```
 
+```shell
+7z x ten_file.7z
+```
+
 ##### Patch file libcapstone.so.5 và libc trên pwn.college
 ```bash
 patchelf --set-interpreter ./ld-linux-x86-64.so.2 ./ello-ackers
