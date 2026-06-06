@@ -531,13 +531,7 @@ LEGEND: STACK | HEAP | CODE | DATA | WX | RODATA
 0xffffffffff600000 0xffffffffff601000 --xp     1000       0 [vsyscall]
 pwndbg> 
 ```
-Điều này xác nhận rằng `0x7fffffffdd40` là địa chỉ thuộc stack. Nếu bạn vẫn cảm thấy bối rối khi xác định địa chỉ này có thuộc stack hay không, hãy lấy địa chỉ kết thúc của stack trừ đi `0x7fffffffdd40`. Nếu nó nhỏ hơn hoặc bằng `0x21000` thì nó thuộc phạm vi stack.
-
-```asm
-pwndbg> p /x 0x7ffffffff000 - 0x7fffffffdd40
-$1 = 0x12c0
-pwndbg> 
-```
+Điều này xác nhận rằng `0x7fffffffdd40` là địa chỉ thuộc stack. Nếu bạn vẫn cảm thấy bối rối khi xác định địa chỉ này có thuộc stack hay không, hãy sử dụng lệnh `vmmap 0x7fffffffdd40`.
 
 Vậy điều này có ý nghĩa gì?
 
