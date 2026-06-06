@@ -40,26 +40,27 @@ int printf(const char *restrict format, ...);
 
 Sau khi thực hiện, nó trả về một int — đó là số ký tự (bytes) đã được in/ghi thành công. Nếu xảy ra lỗi khi in ra (I/O error, encoding error, v.v.) thì trả về giá trị âm.
 
-- Nếu format chỉ là chuỗi ký tự bình thường (không có %):
-```c
-printf("Hello world\n");
-```
- -- printf không đọc thêm đối số nào — chỉ in nguyên chuỗi đó
- -- Nếu bạn truyền thêm tham số nhưng format không dùng thì các tham số đó bị bỏ qua (không đọc).
+* Nếu format chỉ là chuỗi ký tự bình thường (không có %):
+
+	```c
+	printf("Hello world\n");
+	```
+
+  	* `printf()` không đọc thêm đối số nào — chỉ in nguyên chuỗi đó
+	* Nếu bạn truyền thêm tham số nhưng không dùng đến format thì các tham số đó bị bỏ qua (không đọc).
+
  
-- Nếu format có % (conversion specifier):
-```format.c
-printf("val = %d, str = %s\n", 42, "abc");
-```
+* Nếu format có % (conversion specifier):
+	```format.c
+	printf("val = %d, str = %s\n", 42, "abc");
+	```
 
-* %d đọc một int, giá trị 42 được lưu vào `rsi`
-
-* %s đọc một char* , `rdx` trỏ đến địa chỉ của "abc"
-
-* Thứ tự mong đợi đối số của hàm `printf` trên x86_64 Linux với chuẩn `System V ABI` là: 
-    * `rdi`: luôn luôn có giá trị được dùng cho printf, vì nếu không có đối số (argument) sẽ không hợp lệ.
-    * Sau đó là các đối số theo thứ tự: `rsi`, `rdx`, `rcx`, `r8`, `r9`, nếu có float thì sau đó sẽ là các thanh `xmm0 - xmm7` dành cho số thập phân
-    * Hết thứ tự ở các thanh ghi, các giá trị trên stack sẽ được in ra
+	* %d đọc một int, giá trị 42 được lưu vào `rsi`
+	* %s đọc một char* , `rdx` trỏ đến địa chỉ của "abc"
+	* Thứ tự mong đợi đối số của hàm `printf` trên x86_64 Linux với chuẩn `System V ABI` là: 
+	    * `rdi`: luôn luôn có giá trị được dùng cho printf, vì nếu không có đối số (argument) sẽ không hợp lệ.
+	    * Sau đó là các đối số theo thứ tự: `rsi`, `rdx`, `rcx`, `r8`, `r9`, nếu có float thì sau đó sẽ là các thanh `xmm0 - xmm7` dành cho số thập phân
+	    * Hết thứ tự ở các thanh ghi, các giá trị trên stack sẽ được in ra
 
 <hr>
 
@@ -114,7 +115,9 @@ Như các bạn thấy giá trị của các thanh ghi:
 Ở đây không có dùng đến float nên các thanh ghi`xmm0 - xmm7` tạm bỏ qua
 
 Và đây là stack tại thời điểm đó:
-![alt text](image-2.png)
+
+<img width="1484" height="213" alt="image" src="https://github.com/user-attachments/assets/25563141-caa2-442f-a250-3c695c185608" />
+
 
 Cho chương trình `continue` xem chuyện gì xảy ra:
 
