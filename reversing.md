@@ -50,6 +50,39 @@ Việc học phân tích tĩnh trong reverse engineering trên Linux nên bắt 
 
 ---
 
+#### `Sections`
+
+* **Section** là nơi chứa **dữ liệu thực tế** của file ELF. Mỗi section đảm nhiệm một vai trò riêng, chẳng hạn chứa mã máy, dữ liệu, symbol hay thông tin phục vụ quá trình liên kết. Một số section thường gặp gồm:
+
+* `.text`:  Chứa mã máy (machine code) của chương trình.
+
+* `.rodata`: Chứa dữ liệu chỉ đọc (Read-Only Data), chẳng hạn chuỗi hằng (`"Hello World"`), hằng số,...
+
+* `.data`: Chứa các biến toàn cục hoặc biến tĩnh đã được khởi tạo.
+
+* `.bss`: Chứa các biến toàn cục hoặc biến tĩnh **chưa được khởi tạo** hoặc được khởi tạo bằng `0`. Section này **không chiếm dung lượng trong file ELF**, mà chỉ được cấp phát khi chương trình được nạp vào bộ nhớ.
+
+* `.plt`: Chứa các stub (đoạn mã trung gian) dùng để gọi các hàm trong thư viện liên kết động.
+
+* `.got`: Chứa **Global Offset Table (GOT)**, lưu địa chỉ thực của các hàm hoặc biến được liên kết động sau khi dynamic linker hoàn tất việc ánh xạ thư viện.
+
+* `.interp`: Chứa đường dẫn tới **Dynamic Linker** (ví dụ: `/lib64/ld-linux-x86-64.so.2`).
+
+* `.init`: Chứa đoạn mã được thực thi trước hàm `main()`.
+
+* `.fini`: Chứa đoạn mã được thực thi trước khi chương trình kết thúc.
+
+* `.shstrtab`: Chứa tên của tất cả các section trong file ELF.
+
+ <img width="666" height="478" alt="image" src="https://github.com/user-attachments/assets/9623f370-61de-4356-ae2a-c48dfde52f68" />
+
+
+> [!NOTE]
+> **💡 Ghi nhớ:** Muốn biết **mã máy, dữ liệu hay các thông tin khác được lưu ở đâu trong file ELF**, hãy xem các **Sections**.
+
+
+---
+
 #### `Elf64_Shdr` (Section Header)
 
 * **Elf64_Shdr** mô tả thông tin của một **section** trong file ELF. Mỗi `Elf64_Shdr` tương ứng với một entry trong **Section Header Table**, giúp các công cụ như `readelf`, `objdump`, linker,... biết **mỗi section được lưu ở đâu và có đặc điểm gì**. Chứa các thông tin quan trọng như:
