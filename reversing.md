@@ -101,6 +101,11 @@ Việc học phân tích tĩnh trong reverse engineering trên Linux nên bắt 
 > [!NOTE]
 > **💡 Ghi nhớ:** Muốn biết **một section nằm ở đâu hoặc có đặc điểm gì**, hãy xem **`Elf64_Shdr`**.
 
+#### II. Bắt đầu reverse
+
+Để dễ hình dung quy trình reverse cơ bản, ta sẽ đến với 1 file binary đơn giản.
+
+
 
 ---
 
