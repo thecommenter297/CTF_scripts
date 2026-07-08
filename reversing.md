@@ -24,7 +24,7 @@ Việc học phân tích tĩnh trong reverse engineering trên Linux nên bắt 
   <img width="657" height="358" alt="image" src="https://github.com/user-attachments/assets/e6a7f869-dcf8-4de4-b063-600bcd17ce5c" />
 
 > [!NOTE]
-> **💡 Ghi nhớ:** Muốn biết **kernel sẽ nạp chương trình vào bộ nhớ như thế nào**, hãy xem **`Elf64_Phdr`**.
+> **💡 Ghi nhớ:** Muốn biết **thông tin tổng quan của file ELF**, hãy xem **`Elf64_Ehdr`**.
 
 > [!IMPORTANT]
 > Không nhất thiết phải nhớ toàn bộ các trường trong **Elf64_Ehdr**. Điều quan trọng là biết **Elf64_Ehdr** là nơi chứa thông tin tổng quan của file ELF.
