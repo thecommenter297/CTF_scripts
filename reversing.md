@@ -192,14 +192,57 @@ Kết thúc
 
 Vậy chúng ta sẽ xem xét theo quy trình đã nêu để đảm bảo `_start` không làm điều gì ngoài dự đoán.
 
+> [!NOTE]
+> Ở mức độ beginner, chúng ta chưa cần phân tích sâu các startup code. Mục tiêu ở bước này chỉ là **đánh giá nhanh** xem hàm `_start` (và các hàm khởi tạo khác) có giống startup code thông thường hay không. Có thể quan sát theo các tiêu chí sau:
+> 
+> * **Hàm có đang thực hiện đúng vai trò của nó không?**
+> 
+>   Ví dụ, `_start` thường chỉ chuẩn bị môi trường thực thi rồi gọi `__libc_start_main()` để chuyển quyền điều khiển cho runtime. Nếu nội dung của hàm chủ yếu xoay quanh việc khởi tạo và không có logic riêng, đó là dấu hiệu bình thường.
+> 
+> * **Có lời gọi hàm nào đáng ngờ không?**
+> 
+>   Nếu startup code gọi các hàm không liên quan đến quá trình khởi tạo, hoặc gọi tới các hàm tự định nghĩa (`FUN_123`, `decrypt()`, `check_debugger()`...), nên dành thời gian kiểm tra kỹ hơn.
+> 
+> * **Có xuất hiện logic xử lý bất thường không?**
+> 
+>   Một vài nhánh điều kiện hoặc lệnh nhảy đơn giản chưa nói lên điều gì, vì compiler cũng sinh ra chúng. Tuy nhiên, nếu startup code chứa nhiều phép so sánh, vòng lặp hoặc logic xử lý phức tạp thì đó là dấu hiệu đáng để điều tra.
+> 
+> * **Có sử dụng các API hoặc syscall bất thường không?**
+> 
+>   Những lời gọi như `ptrace()`, `mprotect()`, `mmap()` hoặc syscall trực tiếp thường không xuất hiện trong startup code của một chương trình C đơn giản. Nếu gặp các lời gọi này, nên kiểm tra xem chúng phục vụ mục đích gì.
+> 
+
+Quan sát `_start` của chương trình hiện tại, ta thấy hàm chỉ chuẩn bị các tham số cần thiết rồi gọi `__libc_start_main()`. Không xuất hiện logic xử lý đáng chú ý hay các lời gọi hàm bất thường, vì vậy ở giai đoạn này ta có thể **tạm thời** coi startup code là bình thường và chuyển sang phân tích `main()`.
+
   <img width="1536" height="812" alt="image" src="https://github.com/user-attachments/assets/c4fca00d-1432-4e6b-b51e-7db813941745" />
 
-Ở mức độ beginner, chúng ta sẽ chưa học các kĩ thuật nâng cao, vì vậy có 4 dấu hiệu cần để ý nhằm xác định liệu một hàm `_start` là an toàn và có thể lướt qua:
-* Có code gọi hàm `__libc_start_main()` không: Là các đoạn `lea rdi, [main]; call __libc_start_main`. Đây gần như chắc chắn là các đoạn do compiler sinh ra.
-* Có lệnh `call` nào đến các hàm lạ không.
-* Có các nhánh điều kiện kì lạ nào không: `cmp eax, 1; jne LAB_1234`. Nếu có dấu hiệu như so sánh, loop,... thì khả năng đó không phải là hàm `_start` đơn giản nữa.
-* Có đoạn gọi `syscall` hay tồn tại các hàm nào như `ptrace()`, `mprotect()`, `mmap()` không.
+Đối với `__libc_start_main()`, ở giai đoạn này chúng ta sẽ chưa đi sâu vào phân tích vì:
 
+* Đây là hàm thuộc thư viện glibc, không phải mã nguồn do tác giả chương trình viết.
+* Nhiệm vụ của hàm này là khởi tạo môi trường thực thi trước khi gọi `main()`. Cơ chế bên trong khá phức tạp và không cần thiết đối với các bài reverse cơ bản.
+
+Tiếp theo, ta kiểm tra nhanh hàm `_init`.
+
+<img width="1536" height="813" alt="image" src="https://github.com/user-attachments/assets/06db6bb1-e49e-40bd-8e18-4548edf36213" />
+<br><br>
+
+Quan sát cho thấy `_init` chỉ thực hiện công việc khởi tạo của runtime (`__gmon_start__`) và không chứa logic đáng chú ý của chương trình. Vì vậy, ở giai đoạn này ta có thể tạm thời bỏ qua và tiếp tục đến `main()`.
+
+> [!WARNING]
+> Trong quá trình phân tích, bạn sẽ thường gặp các hàm runtime do compiler hoặc linker sinh ra như `__gmon_start__`, `register_tm_clones`, `frame_dummy`, `__do_global_dtors_aux`...
+>
+> Nếu chưa biết chức năng của chúng, đừng cố ghi nhớ ngay. Hãy tra cứu vai trò của từng hàm khi cần. Điều quan trọng ở giai đoạn này là phân biệt được đâu là **runtime code** do compiler sinh ra và đâu là **logic của chương trình** do tác giả viết.
+> 
+> Khi tìm hiểu sâu hơn về C Runtime và glibc, chúng ta sẽ quay lại phân tích chi tiết các hàm này.
+
+> [!IMPORTANT]
+> Không tồn tại một quy tắc có thể xác định chính xác 100% startup code có an toàn hay không. Các tiêu chí trên chỉ giúp đánh giá nhanh đối với các chương trình C thông thường. Khi gặp malware, packer hoặc các challenge RE nâng cao, startup code hoàn toàn có thể bị chỉnh sửa và cần được phân tích kỹ như bất kỳ phần nào khác của chương trình.
+
+**4. `QUAN SÁT HÀM main() VÀ ĐỌC HIỂU LUỒNG THỰC THI`**
+
+  <img width="1536" height="815" alt="image" src="https://github.com/user-attachments/assets/1451ab18-0ebb-4e82-bc6a-103815097478" />
+
+Trong đa số các chương trình C bình thường thì hàm `main()` là điểm khởi đầu phù hợp để tìm hiểu luồng xử lý của chương trình.
 
 
 ---
