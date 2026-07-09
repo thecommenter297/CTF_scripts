@@ -247,7 +247,7 @@ Trong đa số các chương trình C bình thường thì hàm `main()` là đi
 Khi tới bước này thì việc chọn các thanh công cụ nào để hiển thị trên Ghidra cũng là một điều cần lưu ý. Theo kinh nghiệm của mình, với ghidra thường nên có 4 cửa sổ cần thiết:
 * **Decompile**: Hiển thị giả mã
 * **Functions Call Trees**: Hiển thị 2 mục Incoming và Outgoing để biết hàm nào đã gọi hàm đang được xem, và hàm đang được xem sẽ gọi tới hàm nào. Điều quan trọng nhất là nhìn vào các tree này có thể **đoán được sơ bộ** luồng xử lý của từng đoạn chương trình.
-* **Function Graph**: Dùng để hiển thị mã assembly trực quan, bổ trợ cho **Decompile**. Nếu mã giả bị đoán sai thì chỉ cần nhìn sang đây để dễ dàng Retype.
+* **Function Graph**: Dùng để hiển thị mã assembly trực quan, bổ trợ cho **Decompile**. Nếu mã giả bị đoán sai thì chỉ cần nhìn sang đây để dễ dàng Retype. Thêm nữa khi gặp những bài có dạng bài điều kiện so sánh chồng chéo, lồng thêm vòng lặp, việc kết hợp **Function Graph** và **Decompile** sẽ giúp ích khá nhiều ở đoạn đọc hiểu và rename tên biến, các labels.
 * **Listing**: Hiển thị lệnh assembly đầy đủ hơn **Function Graph**. Mặc dù thường thì **Function Graph** cũng chẳng thiếu bao nhiêu đâu, nhưng đôi lúc nó khuyết vài kí tự lệnh vì màn hình không đủ thì cũng khó chịu (-_-")
 
 Về cơ bản thì sau khi bật các cửa sổ cần thiết lên nó sẽ kiểu như thế này:
