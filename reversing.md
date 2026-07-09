@@ -254,6 +254,39 @@ Về cơ bản thì sau khi bật các cửa sổ cần thiết lên nó sẽ ki
 
 <img width="1536" height="817" alt="image" src="https://github.com/user-attachments/assets/ec2df8bd-d4ff-4324-8dcf-2c58b035d9ae" />
 
+**5. `ĐI VÀO PHÂN TÍCH CHI TIẾT LOGIC CỦA CHƯƠNG TRÌNH`**
+
+Dựa vào **Function Call Trees** và Pseudocode ta có thể thấy quy trình của chương trình này là:
+
+```bash
+scanf() => check() xem điều kiện có khớp không => Nhảy đến win() nếu khớp
+```
+
+Hàm `check()` sẽ quyết định ta có thể đi đến `win()` hay không. Vậy ta sẽ đi kiểm tra `check()` có gì.
+
+<img width="1536" height="808" alt="image" src="https://github.com/user-attachments/assets/ba2b7b0f-771c-4bda-958e-ad30b4e8faba" />
+
+Có thể thấy, hàm `check()` thực hiện phép cộng `global_init` với 1237, để so sánh với số mà ta đã nhập vào. Nếu bằng nhau sẽ `win()`.
+
+Biến `global_init` có giá trị là `64h` (Click chuột 2 lần để bảng **Listing** hiện giá trị của `global_init` vì nó là biến toàn cục được đặt ở `.data`)
+
+Các bạn cũng có thể đổi dạng **Data** của `global_init` sang `unit` (unsigned int) và sau đó **Convert** dạng hiển thị sang số Decimal hệ 10 để dễ tính toán bằng cách nhấn chuột phải rồi tùy chọn.
+
+  <img width="1535" height="808" alt="image" src="https://github.com/user-attachments/assets/da163c75-5417-4068-bf47-2d4bf1f400fd" />
+
+**6. `THỰC HIỆN VIỆC LẤY FLAG`**
+
+Đã biết được yêu cầu của chương trình, ta tiến hành điền số để lấy flag.
+
+Ta có: 100 + 1237 = 1337
+
+Vậy chỉ cần điền 1337 vào là ta sẽ thành công lấy Flag.
+
+```bash
+kgf95983@ubuntu:~/train/test_binaries$ ./demo < <(echo -ne '1337')
+=== Simple Reverse Challenge ===
+Input: FLAG{Congratulations!}
+```
 
 ---
 
